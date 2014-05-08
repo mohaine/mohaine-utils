@@ -23,8 +23,8 @@
         </license>
     </licenses>
     <scm>
-        <url>http://svn.apache.org/viewcvs.cgi/maven</url>
-        <connection>http://svn.apache.org/viewcvs.cgi/maven</connection>
+        <url>https://github.com/mohaine/mohaine-utils.git</url>
+        <connection>https://github.com/mohaine/mohaine-utils.git</connection>
     </scm>
     <developers>
         <developer>
