@@ -12,7 +12,7 @@
     <groupId>com.mohaine</groupId>
     <artifactId>mohaine-utils</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.0_SNAPSHOT</version>
     <description>Collection of simple utils</description>
     <url>http://maven.apache.org</url>
     <licenses>
