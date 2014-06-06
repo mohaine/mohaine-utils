@@ -21,6 +21,7 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executor;
 
 public class ProxiedConnection implements Connection {
 
@@ -231,6 +232,31 @@ public class ProxiedConnection implements Connection {
 
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		return proxiedConnection.unwrap(iface);
+	}
+
+	@Override
+	public void abort(Executor executor) throws SQLException {
+		proxiedConnection.abort(executor);		
+	}
+
+	@Override
+	public int getNetworkTimeout() throws SQLException {
+		return proxiedConnection.getNetworkTimeout();
+	}
+
+	@Override
+	public String getSchema() throws SQLException {
+		return proxiedConnection.getSchema();
+	}
+
+	@Override
+	public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
+		proxiedConnection.setNetworkTimeout(executor, milliseconds);		
+	}
+
+	@Override
+	public void setSchema(String schema) throws SQLException {
+		proxiedConnection.setSchema(schema);		
 	}
 
 }

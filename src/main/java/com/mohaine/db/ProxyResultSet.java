@@ -960,4 +960,14 @@ public class ProxyResultSet implements ResultSet {
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return proxied.isWrapperFor(iface);
     }
+
+	@Override
+	public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+		return proxied.getObject(columnIndex, type);
+	}
+
+	@Override
+	public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
+		return proxied.getObject(columnLabel, type);
+	}
 }

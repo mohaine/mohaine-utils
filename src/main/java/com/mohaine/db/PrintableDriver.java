@@ -3,6 +3,7 @@ package com.mohaine.db;
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class PrintableDriver implements Driver {
     /*
@@ -138,4 +139,9 @@ public class PrintableDriver implements Driver {
             }
         };
     }
+
+	@Override
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		throw new SQLFeatureNotSupportedException();
+	}
 }

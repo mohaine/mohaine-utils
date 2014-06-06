@@ -17,7 +17,6 @@ import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 
 public class PrintableCallableStatementProxy extends PrintablePreparedStatementProxy implements CallableStatement {
@@ -568,5 +567,17 @@ public class PrintableCallableStatementProxy extends PrintablePreparedStatementP
         setBind(parameterName, xmlObject);
         callStmt.setSQLXML(parameterName, xmlObject);
     }
+
+	@Override
+	public <T> T getObject(int parameterIndex, Class<T> c) throws SQLException {
+ 		return callStmt.getObject(parameterIndex, c);
+	}
+
+	@Override
+	public <T> T getObject(String parameterName, Class<T> c) throws SQLException {
+ 		return callStmt.getObject(parameterName, c);
+	}
+    
+    	
 
 }
