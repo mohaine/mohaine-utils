@@ -11,7 +11,7 @@
     <groupId>com.mohaine</groupId>
     <artifactId>mohaine-utils</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.0_SNAPSHOT</version>
     <description>Collection of simple utils</description>
     <url>http://maven.apache.org</url>
     <licenses>
@@ -45,21 +45,7 @@
           <target>1.6</target>
         </configuration>
        </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.5</version>
-        <configuration>
-          <keyname>mike@graessle.net</keyname>
-        </configuration>
-      </plugin>
-        <plugin>
-            <artifactId>maven-scm-plugin</artifactId>
-            <configuration>
-                <tag>${project.artifactId}-${project.version}</tag>
-            </configuration>
-        </plugin>
-    </plugins>
+      </plugins>
   </build>
 
 
