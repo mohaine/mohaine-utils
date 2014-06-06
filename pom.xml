@@ -22,9 +22,9 @@
         </license>
     </licenses>
     <scm>
-        <url>git:git@github.com:mohaine/mohaine-utils.git/tags/mohaine-utils-1.0.0</url>
-        <connection>scm:git:git@github.com:mohaine/mohaine-utils.git/tags/mohaine-utils-1.0.0</connection>
-       <developerConnection>scm:git:git@github.com:mohaine/mohaine-utils.git/tags/mohaine-utils-1.0.0</developerConnection>
+        <url>git:git@github.com:mohaine/mohaine-utils.git</url>
+        <connection>scm:git:git@github.com:mohaine/mohaine-utils.git</connection>
+       <developerConnection>scm:git:git@github.com:mohaine/mohaine-utils.git</developerConnection>
 
     </scm>
     <developers>
