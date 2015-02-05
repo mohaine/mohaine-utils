@@ -1,6 +1,5 @@
 package com.mohaine.db;
 
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

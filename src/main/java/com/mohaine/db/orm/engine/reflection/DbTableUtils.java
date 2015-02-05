@@ -1,17 +1,17 @@
 package com.mohaine.db.orm.engine.reflection;
 
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.util.Date;
+
 import com.mohaine.db.orm.DbField;
 import com.mohaine.db.orm.DbTable;
 import com.mohaine.db.orm.DbType;
 import com.mohaine.db.orm.engine.LoadFieldDefinition;
 import com.mohaine.db.orm.engine.ObjectTableMapping;
 import com.mohaine.util.StringUtils;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.util.Date;
 
 public class DbTableUtils {
     private static ObjectDbNameMapper nameMapper = new ObjectDbNameMapper() {

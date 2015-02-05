@@ -1,7 +1,5 @@
 package com.mohaine.db;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class SqlPrinterConsole extends SqlPrinterAbstract {
 

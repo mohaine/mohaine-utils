@@ -1,8 +1,8 @@
 package com.mohaine.db.orm.engine.reflection;
 
-import com.mohaine.db.orm.engine.KeyedObjectTableMapping;
-
 import java.util.UUID;
+
+import com.mohaine.db.orm.engine.KeyedObjectTableMapping;
 
 public class ReflectionKeyedObjectTableMapping extends KeyedObjectTableMapping {
 

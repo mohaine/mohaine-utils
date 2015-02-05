@@ -1,6 +1,5 @@
 package com.mohaine.db;
 
-import java.sql.SQLException;
 
 public interface SqlPrinter {
     public void outputPreSql(Object sql);

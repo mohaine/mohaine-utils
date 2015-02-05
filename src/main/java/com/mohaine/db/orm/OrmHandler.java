@@ -1,14 +1,30 @@
 package com.mohaine.db.orm;
 
-import com.mohaine.db.DatabaseUtils;
-import com.mohaine.db.orm.engine.*;
-import com.mohaine.util.StringUtils;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import com.mohaine.db.DatabaseUtils;
+import com.mohaine.db.orm.engine.Column;
+import com.mohaine.db.orm.engine.FieldDefiniation;
+import com.mohaine.db.orm.engine.KeyedObjectTableMapping;
+import com.mohaine.db.orm.engine.LoadFieldDefinition;
+import com.mohaine.db.orm.engine.MappingCache;
+import com.mohaine.db.orm.engine.ObjectTableMapping;
+import com.mohaine.db.orm.engine.SqlDelete;
+import com.mohaine.db.orm.engine.SqlGenerator;
+import com.mohaine.db.orm.engine.SqlInsert;
+import com.mohaine.db.orm.engine.SqlSet;
+import com.mohaine.db.orm.engine.SqlTable;
+import com.mohaine.db.orm.engine.Update;
+import com.mohaine.db.orm.engine.Where;
+import com.mohaine.util.StringUtils;
 
 public class OrmHandler<T> {
 
@@ -351,14 +367,6 @@ public class OrmHandler<T> {
         return saveObjects;
     }
 
-
-    private String getSequenceName(FieldDefiniation singleKey) {
-        String sequenceName = singleKey.getSequenceName();
-        if (!StringUtils.hasLength(sequenceName)) {
-            sequenceName = "seq_" + tableName;
-        }
-        return sequenceName;
-    }
 
     private void bindInsertStatement(PreparedStatement statement, List<LoadFieldDefinition> fields, Object saveObject) throws SQLException {
         List<Object> binds = new ArrayList<Object>();
