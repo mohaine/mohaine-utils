@@ -35,6 +35,14 @@
         </developer>
     </developers>
 
+
+<distributionManagement>
+  <snapshotRepository>
+    <id>sonatype-nexus-snapshots</id>
+    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  </snapshotRepository>
+</distributionManagement>
+
   <build>
     <plugins>
       <plugin>
@@ -60,7 +68,7 @@
       <version>1.6.3</version>
       <extensions>true</extensions>
       <configuration>
-        <serverId>mohaine</serverId>
+	<serverId>sonatype-nexus-snapshots</serverId>
         <nexusUrl>https://oss.sonatype.org/</nexusUrl>
         <autoReleaseAfterClose>true</autoReleaseAfterClose>
       </configuration>
