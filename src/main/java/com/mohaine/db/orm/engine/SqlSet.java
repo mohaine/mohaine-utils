@@ -18,10 +18,9 @@ public class SqlSet {
 	}
 
 	/**
-	 * Sets the value1.
+	 * Sets the value.
 	 * 
-	 * @param value1
-	 *            The value1 to set
+	 * @param value The value to set
 	 */
 	public void setColumn(Column value) {
 		this.column = value;

@@ -9,8 +9,6 @@ package com.mohaine.db.orm.engine;
 /**
  * @author graessle
  * 
-
- *         Generation>Code and Comments
  */
 public class Where {
 
@@ -30,8 +28,7 @@ public class Where {
 	/**
 	 * Sets the value1.
 	 * 
-	 * @param value1
-	 *            The value1 to set
+	 * @param value The value1 to set
 	 */
 	public void setColumn(Column value) {
 		this.column = value;

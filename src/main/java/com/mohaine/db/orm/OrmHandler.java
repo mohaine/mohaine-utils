@@ -540,7 +540,7 @@ public class OrmHandler<T> {
     /**
      * This is a quick and dirty for the ProcessSqlGenerator. Probably need a better solution.....
      *
-     * @param string
+     * @param string  table prefix
      */
     public void setTablePrefix(String string) {
         this.tablePrefix = string;

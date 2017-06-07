@@ -8,16 +8,10 @@ public class ValidateConstraints {
 
 	private boolean bindNull;
 
-	/**
-	 * Constructor
-	 */
 	public ValidateConstraints(boolean bindNull) {
 		this.bindNull = bindNull;
 	}
 
-	/**
-	 * Constructor
-	 */
 	public ValidateConstraints() {
 		this(DEFAULT_BIND_NULL);
 	}
