@@ -22,26 +22,15 @@ public class JsonDecoderReader {
     private Reader reader;
     private JsonConverterConfig config;
 
-    private TaskTimer readTimer = null;
-    private TaskTimer readyTimer = null;
-
-    private void setupTimers() {
-
-        readTimer = TaskTimer.current().getSub("Read");
-        readyTimer = TaskTimer.current().getSub("Ready");
-    }
 
     public JsonDecoderReader(Reader reader) {
         this.reader = reader;
         config = new JsonConverterConfig();
-        setupTimers();
-
     }
 
     public JsonDecoderReader(JsonConverterConfig config, Reader reader) {
         this.config = config;
         this.reader = reader;
-        setupTimers();
     }
 
     public Object parseJson() throws IOException {
