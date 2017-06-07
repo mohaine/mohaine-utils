@@ -13,12 +13,12 @@ public class ParseReaderTest extends TestCase {
     public void testParseNoWhiteSpace() throws Exception {
         JsonDecoderReader dc = new JsonDecoderReader(new StringReader("{\"fieldInt\":1,\"fieldFloat\":1.2\"fieldStr\":\"Str\",\"fieldNull\":null,\"fieldBoolT\":true\"fieldBoolF\":false}"));
         JsonUnknownObject o = (JsonUnknownObject) dc.parseJson();
-        assertEquals(1l,(long) o.getProperty("fieldInt"));
+        assertEquals(1l,((Long) o.getProperty("fieldInt")).longValue());
         assertEquals(1.2, o.getProperty("fieldFloat"));
         assertEquals("Str", o.getProperty("fieldStr"));
         assertEquals(null, o.getProperty("fieldNull"));
-        assertEquals(true, (boolean)o.getProperty("fieldBoolT"));
-        assertEquals(false,(boolean) o.getProperty("fieldBoolF"));
+        assertEquals(true, ((Boolean)o.getProperty("fieldBoolT")).booleanValue());
+        assertEquals(false,((Boolean) o.getProperty("fieldBoolF")).booleanValue());
     }
 
 
@@ -26,7 +26,7 @@ public class ParseReaderTest extends TestCase {
     public void testParseWhiteSpace() throws Exception {
         JsonDecoderReader dc = new JsonDecoderReader(new StringReader("{  \"fieldInt\" : 1, \"fieldFloat\":1.2\"fieldStr\"   :  \"Str\"   }"));
         JsonUnknownObject o = (JsonUnknownObject) dc.parseJson();
-        assertEquals(1l, (long)o.getProperty("fieldInt"));
+        assertEquals(1l, ((Long)o.getProperty("fieldInt")).longValue());
         assertEquals(1.2, o.getProperty("fieldFloat"));
         assertEquals("Str", o.getProperty("fieldStr"));
     }
@@ -39,7 +39,7 @@ public class ParseReaderTest extends TestCase {
 
         JsonUnknownObject p = (JsonUnknownObject) dc.parseJson();
         JsonUnknownObject o = (JsonUnknownObject) p.getProperty("obj");
-        assertEquals(1l,(long) o.getProperty("fieldInt"));
+        assertEquals(1l,((Long) o.getProperty("fieldInt")).longValue());
         assertEquals(1.2, o.getProperty("fieldFloat"));
         assertEquals("Str", o.getProperty("fieldStr"));
     }
