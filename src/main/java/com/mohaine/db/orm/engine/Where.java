@@ -9,7 +9,7 @@ package com.mohaine.db.orm.engine;
 /**
  * @author graessle
  * 
- *         To change this generated comment go to Window>Preferences>Java>Code
+
  *         Generation>Code and Comments
  */
 public class Where {

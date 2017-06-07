@@ -13,8 +13,8 @@ import java.util.UUID;
 /**
  * @author graessle
  * 
- *         To change this generated comment go to Window>Preferences>Java>Code
- *         Generation>Code and Comments
+
+
  */
 public class SqlGenerator {
 
