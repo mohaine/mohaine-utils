@@ -4,9 +4,9 @@ package com.mohaine.db;
 public interface SqlPrinter {
     public void outputPreSql(Object sql);
 
-    void outputPostSql(Object sql, long startTime);
+    public void outputPostSql(Object sql, long startTime);
 
-    void outputSqlError(Object sql);
+    public void outputSqlError(Object sql);
 
-    String getBindSqlString(Object o);
+    public String getBindSqlString(Object o);
 }
