@@ -25,4 +25,8 @@ public class JsonUnknownObject {
 		return properties;
 	}
 
+	@Override
+	public String toString() {
+		return properties.toString();
+	}
 }

@@ -7,9 +7,9 @@ public abstract class JsonObjectPropertyHandler<T, F> {
 
 	public abstract void setValue(T object, F value);
 
-	public Class<?> getExpectedType() {
-		return null;
-	}
+	public abstract Class<?> getGenericType();
+
+	public abstract Class<?> getExpectedType();
 
 	public boolean isJson() {
 		return false;

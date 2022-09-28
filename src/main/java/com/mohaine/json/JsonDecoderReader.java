@@ -156,7 +156,7 @@ public class JsonDecoderReader {
         return c == ' ' || c == '\r' || c == '\t' || c == '\n' || c == '\b' || c == '\f';
     }
 
-    private Object parseObject() throws IOException {
+    private JsonUnknownObject parseObject() throws IOException {
         int startIndex = offset;
         offset++;
         JsonUnknownObject unknownObject = new JsonUnknownObject();
@@ -165,7 +165,7 @@ public class JsonDecoderReader {
             char startChar = readChar();
             if (startChar == '}') {
                 offset++;
-                return config.convertToObject(unknownObject);
+                return unknownObject;
             } else if (startChar == ',') {
                 offset++;
                 String name = parseName();

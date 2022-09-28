@@ -49,25 +49,10 @@ public class JsonConverterConfig {
 		return null;
 	}
 
-	public Object convertToObject(JsonUnknownObject unknownObject) {
-		if (objectHandlers != null) {
-			Object property = unknownObject.getProperty(JsonObjectConverter.TYPE);
-			if (property != null && property instanceof String) {
-				String typeString = (String) property;
-				for (JsonObjectHandler<?> handler : objectHandlers) {
-					if (typeString.equals(handler.getType())) {
-						return convertToObject(unknownObject, handler);
-					}
-				}
-			}
-		}
-		return unknownObject;
-	}
 
 	public <T> T convertToObject(JsonUnknownObject unknownObject, JsonObjectHandler<T> handler) {
 		try {
-			T obj = handler.createNewObject();
-			handler.processFromUnknown(obj, unknownObject, this);
+			T obj = handler.fromJson(unknownObject, this);
 			return obj;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
