@@ -5,17 +5,17 @@ import java.util.List;
 
 class Statement {
 
-	private List<SqlTable> tables = new ArrayList<SqlTable>();
+    private List<SqlTable> tables = new ArrayList<SqlTable>();
 
-	public Statement() {
-	}
+    public Statement() {
+    }
 
-	public List<SqlTable> getTables() {
-		return tables;
-	}
+    public List<SqlTable> getTables() {
+        return tables;
+    }
 
-	public void setTables(List<SqlTable> tables) {
-		this.tables = tables;
-	}
+    public void setTables(List<SqlTable> tables) {
+        this.tables = tables;
+    }
 
 }

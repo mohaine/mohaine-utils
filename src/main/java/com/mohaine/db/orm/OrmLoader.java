@@ -1,19 +1,14 @@
 package com.mohaine.db.orm;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.mohaine.db.DatabaseUtils;
 import com.mohaine.db.orm.engine.LoadFieldDefinition;
 import com.mohaine.db.orm.engine.MappingCache;
 import com.mohaine.db.orm.engine.ObjectTableMapping;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class OrmLoader<E> {
     private static final int FETCH_SIZE = 1000;

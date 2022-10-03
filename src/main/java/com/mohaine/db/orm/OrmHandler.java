@@ -1,30 +1,14 @@
 package com.mohaine.db.orm;
 
+import com.mohaine.db.DatabaseUtils;
+import com.mohaine.db.orm.engine.*;
+import com.mohaine.util.StringUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-import com.mohaine.db.DatabaseUtils;
-import com.mohaine.db.orm.engine.Column;
-import com.mohaine.db.orm.engine.FieldDefiniation;
-import com.mohaine.db.orm.engine.KeyedObjectTableMapping;
-import com.mohaine.db.orm.engine.LoadFieldDefinition;
-import com.mohaine.db.orm.engine.MappingCache;
-import com.mohaine.db.orm.engine.ObjectTableMapping;
-import com.mohaine.db.orm.engine.SqlDelete;
-import com.mohaine.db.orm.engine.SqlGenerator;
-import com.mohaine.db.orm.engine.SqlInsert;
-import com.mohaine.db.orm.engine.SqlSet;
-import com.mohaine.db.orm.engine.SqlTable;
-import com.mohaine.db.orm.engine.Update;
-import com.mohaine.db.orm.engine.Where;
-import com.mohaine.util.StringUtils;
+import java.util.*;
 
 public class OrmHandler<T> {
 
@@ -212,7 +196,7 @@ public class OrmHandler<T> {
     }
 
     private void bindUpdateStatement(List<LoadFieldDefinition> fields, List<FieldDefiniation> keys, FieldDefiniation parentKey, PreparedStatement updateStatement, Object saveObject)
-        throws SQLException {
+            throws SQLException {
         int count = 1;
         for (int i = 0, size = fields.size(); i < size; i++) {
             LoadFieldDefinition loadField = fields.get(i);
@@ -540,7 +524,7 @@ public class OrmHandler<T> {
     /**
      * This is a quick and dirty for the ProcessSqlGenerator. Probably need a better solution.....
      *
-     * @param string  table prefix
+     * @param string table prefix
      */
     public void setTablePrefix(String string) {
         this.tablePrefix = string;
