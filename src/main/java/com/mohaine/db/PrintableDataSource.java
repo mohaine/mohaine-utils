@@ -1,12 +1,11 @@
 package com.mohaine.db;
 
+import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
-
-import javax.sql.DataSource;
 
 public class PrintableDataSource implements DataSource {
 
@@ -19,12 +18,12 @@ public class PrintableDataSource implements DataSource {
     }
 
     public Connection getConnection() throws SQLException {
-        return new PrintableConnectionProxy(proxiedDataSource.getConnection(),  printer);
+        return new PrintableConnectionProxy(proxiedDataSource.getConnection(), printer);
     }
 
     public Connection getConnection(String username, String password) throws SQLException {
         final Connection connection = proxiedDataSource.getConnection(username, password);
-        return new PrintableConnectionProxy(connection,  printer);
+        return new PrintableConnectionProxy(connection, printer);
     }
 
     public PrintWriter getLogWriter() throws SQLException {

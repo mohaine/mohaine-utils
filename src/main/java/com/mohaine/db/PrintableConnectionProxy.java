@@ -1,15 +1,11 @@
 package com.mohaine.db;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 
 public class PrintableConnectionProxy extends ProxiedConnection {
 
-    private final SqlPrinter printer ;
+    private final SqlPrinter printer;
 
     public PrintableConnectionProxy(Connection proxiedConnection, SqlPrinter printer) {
         super(proxiedConnection);
@@ -34,7 +30,7 @@ public class PrintableConnectionProxy extends ProxiedConnection {
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         return new PrintableCallableStatementProxy(printer, super.prepareCall(sql, resultSetType, resultSetConcurrency),
-            sql);
+                sql);
     }
 
     @Override
@@ -44,16 +40,16 @@ public class PrintableConnectionProxy extends ProxiedConnection {
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws
-        SQLException {
+            SQLException {
         return new PrintablePreparedStatementProxy(printer,
-            super.prepareStatement(sql, resultSetType, resultSetConcurrency), sql);
+                super.prepareStatement(sql, resultSetType, resultSetConcurrency), sql);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency,
                                               int resultSetHoldability) throws SQLException {
         return new PrintablePreparedStatementProxy(printer,
-            super.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability), sql);
+                super.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability), sql);
     }
 
     @Override
@@ -68,16 +64,16 @@ public class PrintableConnectionProxy extends ProxiedConnection {
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws
-        SQLException {
+            SQLException {
         return new PrintableStatementProxy(printer,
-            super.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
+                super.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
     }
 
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency,
                                          int resultSetHoldability) throws SQLException {
         return new PrintableCallableStatementProxy(printer,
-            super.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability), sql);
+                super.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability), sql);
     }
 
     @Override

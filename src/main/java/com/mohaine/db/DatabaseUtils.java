@@ -1,31 +1,23 @@
 package com.mohaine.db;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mohaine.db.orm.engine.SqlGenerator;
 import com.mohaine.util.StreamUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class DatabaseUtils {
     public static boolean execute(Connection conn, String sql)
-        throws SQLException {
+            throws SQLException {
         return execute(conn, sql, null);
     }
 
     public static int update(Connection conn, String sql, Object[] binds)
-        throws SQLException {
+            throws SQLException {
         PreparedStatement ps = null;
         try {
             ps = conn.prepareStatement(sql);
@@ -43,7 +35,7 @@ public class DatabaseUtils {
     }
 
     public static boolean execute(Connection conn, String sql, Object[] binds)
-        throws SQLException {
+            throws SQLException {
         PreparedStatement ps = null;
         try {
             ps = conn.prepareStatement(sql);
@@ -60,13 +52,13 @@ public class DatabaseUtils {
     }
 
     public static Object getObject(ResultSet resultSet, int index)
-        throws SQLException {
+            throws SQLException {
         return getObject(resultSet, index, resultSet.getMetaData()
-            .getColumnType(index));
+                .getColumnType(index));
     }
 
     public static Object getObject(ResultSet resultSet, int index, int type)
-        throws SQLException {
+            throws SQLException {
         Object value = null;
         if (type == Types.VARBINARY) {
             value = resultSet.getString(index);
@@ -103,17 +95,17 @@ public class DatabaseUtils {
     }
 
     public static Object selectSingle(Connection conn, String sql)
-        throws SQLException {
+            throws SQLException {
         return selectSingle(conn, sql, null);
     }
 
     public static Object[][] select(Connection conn, String sql)
-        throws SQLException {
+            throws SQLException {
         return select(conn, sql, null);
     }
 
     public static Object[][] select(Connection conn, String sql, Object[] binds)
-        throws SQLException {
+            throws SQLException {
         return select(conn, sql, binds, -1);
     }
 
@@ -181,7 +173,7 @@ public class DatabaseUtils {
     }
 
     public static Object selectSingle(Connection conn, List<?> binds, String sql)
-        throws SQLException {
+            throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
@@ -207,7 +199,7 @@ public class DatabaseUtils {
     }
 
     public static String selectCsv(Connection conn, String sql, Object[] binds)
-        throws SQLException {
+            throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         StringBuffer sb = new StringBuffer();

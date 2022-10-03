@@ -1,10 +1,8 @@
 package com.mohaine.json;
 
-import com.mohaine.util.TaskTimer;
-
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class JsonDecoderReader {
@@ -68,7 +66,7 @@ public class JsonDecoderReader {
     private boolean notDone() throws IOException {
 //        readyTimer.start();
 //        try {
-            return !(bufferOffset == bufferEnd && outOfData);
+        return !(bufferOffset == bufferEnd && outOfData);
 //        } finally {
 //            readyTimer.stop();
 //        }
@@ -91,13 +89,13 @@ public class JsonDecoderReader {
     private char readChar() throws IOException {
 //        readTimer.start();
 //        try {
-            if (offset == lastReadOffset) {
-                return buffer[lastReadOffset - bufferHistory];
-            }
-            readMoreIfNeeded();
-            lastReadOffset = bufferOffset + bufferHistory;
-            bufferOffset++;
+        if (offset == lastReadOffset) {
             return buffer[lastReadOffset - bufferHistory];
+        }
+        readMoreIfNeeded();
+        lastReadOffset = bufferOffset + bufferHistory;
+        bufferOffset++;
+        return buffer[lastReadOffset - bufferHistory];
 //        } finally {
 //            readTimer.stop();
 //            readTimer.stop();
@@ -156,7 +154,7 @@ public class JsonDecoderReader {
         return c == ' ' || c == '\r' || c == '\t' || c == '\n' || c == '\b' || c == '\f';
     }
 
-    private Object parseObject() throws IOException {
+    private JsonUnknownObject parseObject() throws IOException {
         int startIndex = offset;
         offset++;
         JsonUnknownObject unknownObject = new JsonUnknownObject();
@@ -165,7 +163,7 @@ public class JsonDecoderReader {
             char startChar = readChar();
             if (startChar == '}') {
                 offset++;
-                return config.convertToObject(unknownObject);
+                return unknownObject;
             } else if (startChar == ',') {
                 offset++;
                 String name = parseName();

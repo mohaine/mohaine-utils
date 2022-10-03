@@ -1,7 +1,7 @@
 package com.mohaine.db;
 
 
-class SqlPrinterConsole extends SqlPrinterAbstract {
+public class SqlPrinterConsole extends SqlPrinterAbstract {
 
     @Override
     public void outputPreSql(Object sql) {

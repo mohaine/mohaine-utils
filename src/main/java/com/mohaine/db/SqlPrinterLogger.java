@@ -3,7 +3,7 @@ package com.mohaine.db;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class SqlPrinterLogger extends SqlPrinterAbstract {
+public class SqlPrinterLogger extends SqlPrinterAbstract {
     public static final Level DEFAULT_POST_PRINT_PRIORITY = Level.FINEST;
 
     private Logger objectLogger = null;
