@@ -54,7 +54,7 @@ public abstract class JsonObjectHandlerBase<T> implements JsonObjectHandler<T> {
                 Object property = unknownObject.getProperty(phT.getName());
                 if (property instanceof JsonUnknownObject) {
                     if (phT.isJson()) {
-                        StringBuffer sb = new StringBuffer();
+                        StringBuilder sb = new StringBuilder();
                         new JsonEncoder(config).appendObject(sb, property);
                         property = sb.toString();
                     } else {
@@ -76,7 +76,7 @@ public abstract class JsonObjectHandlerBase<T> implements JsonObjectHandler<T> {
                         }
                     }
                 }
-                namesToValues.put(phT.getName(), property);
+                namesToValues.put(phT.getName(), phT.mapValue(property));
             }
         }
         var newObj = createNewObject(namesToValues);

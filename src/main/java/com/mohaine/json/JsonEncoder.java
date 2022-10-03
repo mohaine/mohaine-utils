@@ -7,7 +7,7 @@ public class JsonEncoder {
     private JsonConverterConfig config;
 
     public JsonEncoder() {
-
+        this.config = new JsonConverterConfig();
     }
 
     public JsonEncoder(JsonConverterConfig config) {
@@ -15,7 +15,7 @@ public class JsonEncoder {
         this.config = config;
     }
 
-    public void appendList(StringBuffer sb, Collection values) {
+    public void appendList(StringBuilder sb, Collection values) {
         sb.append("[");
         int count = 0;
         if (values != null) {
@@ -36,7 +36,7 @@ public class JsonEncoder {
         sb.append("]");
     }
 
-    private void appendArray(StringBuffer sb, Object[] values) {
+    private void appendArray(StringBuilder sb, Object[] values) {
         sb.append("[");
         int count = 0;
         if (values != null) {
@@ -57,7 +57,7 @@ public class JsonEncoder {
         sb.append("]");
     }
 
-    public void appendMap(StringBuffer sb, Map map) {
+    public void appendMap(StringBuilder sb, Map map) {
         sb.append("{");
         int count = 0;
         for (Iterator iter = map.keySet().iterator(); iter.hasNext(); ) {
@@ -76,7 +76,7 @@ public class JsonEncoder {
         sb.append("}");
     }
 
-    public void appendNamedValue(StringBuffer sb, String name, List values) {
+    public void appendNamedValue(StringBuilder sb, String name, List values) {
         if (values == null) {
             sb.append('"');
             escapeStringForJson(sb, name);
@@ -90,7 +90,7 @@ public class JsonEncoder {
 
     }
 
-    public void appendNamedValue(StringBuffer sb, String name, Map map) {
+    public void appendNamedValue(StringBuilder sb, String name, Map map) {
         if (map == null) {
             sb.append('"');
             escapeStringForJson(sb, name);
@@ -104,7 +104,7 @@ public class JsonEncoder {
 
     }
 
-    public void appendNamedValue(StringBuffer sb, String name, Object value) {
+    public void appendNamedValue(StringBuilder sb, String name, Object value) {
         appendString(sb, name);
         sb.append(':');
         if (!appendObject(sb, value)) {
@@ -112,13 +112,13 @@ public class JsonEncoder {
         }
     }
 
-    public void appendNamedJsonValue(StringBuffer sb, String name, String value) {
+    public void appendNamedJsonValue(StringBuilder sb, String name, String value) {
         appendString(sb, name);
         sb.append(':');
         sb.append(value);
     }
 
-    public boolean appendObject(StringBuffer sb, Object value) {
+    public boolean appendObject(StringBuilder sb, Object value) {
         if (value == null) {
             sb.append("null");
         } else {
@@ -143,7 +143,7 @@ public class JsonEncoder {
         return true;
     }
 
-    private void appendDate(StringBuffer sb, Date date) {
+    private void appendDate(StringBuilder sb, Date date) {
         if (date == null) {
             sb.append("null");
         }
@@ -152,7 +152,7 @@ public class JsonEncoder {
         sb.append(")\\/\"");
     }
 
-    private void appendBoolean(StringBuffer sb, Object value) {
+    private void appendBoolean(StringBuilder sb, Object value) {
         if (((Boolean) value).booleanValue()) {
             sb.append("true");
         } else {
@@ -160,7 +160,7 @@ public class JsonEncoder {
         }
     }
 
-    public boolean toJson(StringBuffer sb, Object value) {
+    public boolean toJson(StringBuilder sb, Object value) {
         ArrayList<JsonObjectHandler<?>> objectHandlers = config.getObjectHandlers();
         if (objectHandlers != null) {
             for (JsonObjectHandler handler : objectHandlers) {
@@ -180,19 +180,19 @@ public class JsonEncoder {
         return false;
     }
 
-    public void appendNamedValue(StringBuffer sb, String name, boolean value) {
+    public void appendNamedValue(StringBuilder sb, String name, boolean value) {
         appendString(sb, name);
         sb.append(':');
         appendBoolean(sb, value ? Boolean.TRUE : Boolean.FALSE);
     }
 
 
-    public void appendAnotherNamedValue(StringBuffer sb, String name, Number value) {
+    public void appendAnotherNamedValue(StringBuilder sb, String name, Number value) {
         sb.append(',');
         appendNamedValue(sb, name, value);
     }
 
-    public void appendNamedValue(StringBuffer sb, String name, Number value) {
+    public void appendNamedValue(StringBuilder sb, String name, Number value) {
         appendString(sb, name);
         sb.append(':');
         if (value == null) {
@@ -202,33 +202,33 @@ public class JsonEncoder {
         }
     }
 
-    public void appendAnotherNamedValue(StringBuffer sb, String name, boolean value) {
+    public void appendAnotherNamedValue(StringBuilder sb, String name, boolean value) {
         sb.append(',');
         appendNamedValue(sb, name, value);
     }
 
-    public void appendAnotherNamedValue(StringBuffer sb, String name, Object value) {
+    public void appendAnotherNamedValue(StringBuilder sb, String name, Object value) {
         sb.append(',');
         appendNamedValue(sb, name, value);
     }
 
-    public void appendAnotherNamedValue(StringBuffer sb, String name, List value) {
+    public void appendAnotherNamedValue(StringBuilder sb, String name, List value) {
         sb.append(',');
         appendNamedValue(sb, name, value);
     }
 
-    public void appendAnotherNamedValue(StringBuffer sb, String name, String value) {
+    public void appendAnotherNamedValue(StringBuilder sb, String name, String value) {
         sb.append(',');
         appendNamedValue(sb, name, value);
     }
 
-    public void appendNamedValue(StringBuffer sb, String name, String value) {
+    public void appendNamedValue(StringBuilder sb, String name, String value) {
         appendString(sb, name);
         sb.append(':');
         appendString(sb, value);
     }
 
-    public void appendString(StringBuffer sb, String name) {
+    public void appendString(StringBuilder sb, String name) {
         if (name == null) {
             sb.append("null");
         } else {
@@ -238,7 +238,7 @@ public class JsonEncoder {
         }
     }
 
-    private void escapeStringForJson(StringBuffer sb, String value) {
+    private void escapeStringForJson(StringBuilder sb, String value) {
 
         if (value == null) {
             sb.append("null");

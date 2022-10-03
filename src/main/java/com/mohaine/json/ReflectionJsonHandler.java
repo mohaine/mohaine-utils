@@ -23,21 +23,18 @@ public class ReflectionJsonHandler {
 
         @Override
         public Class<?> getGenericType() {
-            ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
-            return (Class<?>) parameterizedType.getActualTypeArguments()[0];
+            Type genericType = field.getGenericType();
+            if (genericType instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) genericType;
+                return (Class<?>) parameterizedType.getActualTypeArguments()[0];
+            }
+            return null;
         }
 
         @Override
         public Class<?> getExpectedType() {
             return field.getType();
         }
-
-//        public Class<?> getGenericType() {
-//            return (Class<T>)
-//                    ((ParameterizedType) getExpectedType().getGenericSuperclass())
-//                            .getActualTypeArguments()[0];
-//        }
-
 
         @Override
         public boolean isJson() {
@@ -48,7 +45,6 @@ public class ReflectionJsonHandler {
         public F getValue(T object) {
             try {
                 Object value = field.get(object);
-
                 if (value instanceof Enum) {
                     return (F) value.toString();
                 }
@@ -61,44 +57,67 @@ public class ReflectionJsonHandler {
         @Override
         public void setValue(T object, F value) {
             try {
-                if (value != null) {
-                    if (field.getType().isEnum()) {
-                        Object[] enums = field.getType().getEnumConstants();
-                        for (Object enumValue : enums) {
-                            if (enumValue.toString().equals(value)) {
-                                value = (F) enumValue;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (value instanceof JsonUnknownObject) {
-                        if (Map.class.isAssignableFrom(field.getType())) {
-                            JsonUnknownObject juo = (JsonUnknownObject) value;
-                            value = (F) juo.getProperties();
-                        }
-                    }
-                } else {
-                    if (Boolean.TYPE.equals(field.getType())) {
-                        value = (F) Boolean.FALSE;
-                    } else if (Integer.TYPE.equals(field.getType())) {
-                        value = (F) Integer.valueOf(0);
-                    } else if (Long.TYPE.equals(field.getType())) {
-                        value = (F) Long.valueOf(0);
-                    } else if (Double.TYPE.equals(field.getType())) {
-                        value = (F) Double.valueOf(0);
-                    } else if (Float.TYPE.equals(field.getType())) {
-                        value = (F) Float.valueOf(0);
-                    } else if (Byte.TYPE.equals(field.getType())) {
-                        value = (F) Byte.valueOf((byte) 0);
-                    }
-                }
-
                 field.set(object, value);
             } catch (Exception e) {
                 throw new RuntimeException("Failed to set value " + value + " on " + field.getDeclaringClass().getName() + "." + field.getName(), e);
             }
 
+        }
+
+        @Override
+        public F mapValue(F value) {
+            if (value != null) {
+                if (field.getType().isEnum()) {
+                    Object[] enums = field.getType().getEnumConstants();
+                    for (Object enumValue : enums) {
+                        if (enumValue.toString().equals(value)) {
+
+                            value = (F) enumValue;
+                            break;
+                        }
+                    }
+                }
+                if (value instanceof JsonUnknownObject) {
+                    if (Map.class.isAssignableFrom(field.getType())) {
+                        JsonUnknownObject juo = (JsonUnknownObject) value;
+                        value = (F) juo.getProperties();
+                    }
+                }
+                if (!field.getType().isAssignableFrom(value.getClass())) {
+
+                    if (Integer.class.isAssignableFrom(field.getType())) {
+                        if (value instanceof Long) {
+                            value = (F) Integer.valueOf(((Long) value).intValue());
+                        }
+//                    } else if (Long.TYPE.equals(field.getType())) {
+//                        value = (F) Long.valueOf(0);
+//                    } else if (Double.TYPE.equals(field.getType())) {
+//                        value = (F) Double.valueOf(0);
+//                    } else if (Float.TYPE.equals(field.getType())) {
+//                        value = (F) Float.valueOf(0);
+//                    } else if (Byte.TYPE.equals(field.getType())) {
+//                        value = (F) Byte.valueOf((byte) 0);
+                    } else {
+                        throw new RuntimeException(" Need to map: " + value.getClass().getName() + " -> " + field.getType().getName());
+                    }
+                }
+
+            } else {
+                if (Boolean.TYPE.equals(field.getType())) {
+                    value = (F) Boolean.FALSE;
+                } else if (Integer.TYPE.equals(field.getType())) {
+                    value = (F) Integer.valueOf(0);
+                } else if (Long.TYPE.equals(field.getType())) {
+                    value = (F) Long.valueOf(0);
+                } else if (Double.TYPE.equals(field.getType())) {
+                    value = (F) Double.valueOf(0);
+                } else if (Float.TYPE.equals(field.getType())) {
+                    value = (F) Float.valueOf(0);
+                } else if (Byte.TYPE.equals(field.getType())) {
+                    value = (F) Byte.valueOf((byte) 0);
+                }
+            }
+            return value;
         }
     }
 
@@ -114,6 +133,7 @@ public class ReflectionJsonHandler {
         public ReflectionJsonObjectHandler(Class<T> classToBuild) {
             this.classToBuild = classToBuild;
             var rawTypes = new Class<?>[0];
+
             RecordComponent[] recordComponents = classToBuild.getRecordComponents();
             if (recordComponents == null) {
                 constructorGenericTypes = new Type[0];
@@ -128,12 +148,14 @@ public class ReflectionJsonHandler {
                     index += 1;
                 }
             }
+
             try {
                 this.constructor = classToBuild.getDeclaredConstructor(rawTypes);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
             this.constructor.setAccessible(true);
+
         }
 
         public Class<T> getType() {
@@ -170,6 +192,15 @@ public class ReflectionJsonHandler {
                 return new CreateNewObject((T) constructor.newInstance(args), unhandledNames);
             } catch (InstantiationException | SecurityException | IllegalAccessException |
                      IllegalArgumentException | InvocationTargetException e) {
+
+
+                System.out.println("types: " + Arrays.asList(constructorGenericTypes).stream().map(i -> i.getTypeName()).toList());
+                System.out.println("args : " + Arrays.asList(args).stream().map(i -> {
+                    if (i == null) {
+                        return null;
+                    }
+                    return i.getClass().getName();
+                }).toList());
                 throw new RuntimeException(e);
             }
         }
@@ -180,10 +211,22 @@ public class ReflectionJsonHandler {
 
     }
 
-    public static <T> JsonObjectHandler<T> build(final Class<T> classToBuild) throws Exception {
+    public static <T> ReflectionJsonObjectHandler<T> build(final Class<T> classToBuild) throws Exception {
         ReflectionJsonObjectHandler<T> joh = new ReflectionJsonObjectHandler<T>(classToBuild);
         addFields(joh, classToBuild);
         return joh;
+    }
+
+    public static void buildAll(JsonConverterConfig config, final Class<?> classToBuild) throws Exception {
+        if (classToBuild != null && !config.canHandle(classToBuild)) {
+            ReflectionJsonObjectHandler<?> handler = build(classToBuild);
+            config.addHandler(handler);
+
+            for (var fieldHandler : handler.phs) {
+                buildAll(config, fieldHandler.getExpectedType());
+                buildAll(config, fieldHandler.getGenericType());
+            }
+        }
     }
 
 
@@ -195,9 +238,7 @@ public class ReflectionJsonHandler {
         }
         Field[] fields = objClass.getDeclaredFields();
         for (Field field : fields) {
-            if (!field.isAccessible()) {
-                field.setAccessible(true);
-            }
+            field.setAccessible(true);
             if (Modifier.isStatic(field.getModifiers())) {
                 continue;
             }

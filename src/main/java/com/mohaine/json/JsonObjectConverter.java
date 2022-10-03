@@ -23,7 +23,7 @@ public class JsonObjectConverter {
 
 	public String encode(Object obj) {
 		JsonEncoder jc = new JsonEncoder(config);
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		jc.appendObject(sb, obj);
 		return sb.toString();
 	}

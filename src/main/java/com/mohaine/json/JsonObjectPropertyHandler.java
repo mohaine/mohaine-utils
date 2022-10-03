@@ -15,4 +15,5 @@ public abstract class JsonObjectPropertyHandler<T, F> {
 		return false;
 	}
 
+    public abstract F mapValue(F value);
 }

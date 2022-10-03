@@ -38,7 +38,7 @@ public class ReflectionJsonHandlerTest {
 
         JsonEncoder encoder = new JsonEncoder(config);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         var value = new TestClass();
         value.setStringField("Some Random Value");
@@ -60,7 +60,7 @@ public class ReflectionJsonHandlerTest {
 
         JsonEncoder encoder = new JsonEncoder(config);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         var value = new TestRecord("Some Random Value");
         encoder.appendObject(sb, value);
@@ -81,17 +81,36 @@ public class ReflectionJsonHandlerTest {
 
         JsonEncoder encoder = new JsonEncoder(config);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         var list = new ArrayList<TestRecord>();
         list.add(new TestRecord("Child 1"));
         list.add(new TestRecord("Child 2"));
-        var value = new TestRecordWithList("Some Random Value",list);
+        var value = new TestRecordWithList("Some Random Value", list);
         encoder.appendObject(sb, value);
 
         System.out.println("JSON: " + sb.toString());
         JsonDecoder decoder = new JsonDecoder(config, sb.toString());
         var valueBack = decoder.parseJson(TestRecordWithList.class);
+        assertNotNull(valueBack);
+
+        assertEquals(value.field, valueBack.field);
+        assertEquals(value.records, valueBack.records);
+    }
+
+    @Test
+    public void testEasyButton() throws Exception {
+
+
+        var list = new ArrayList<TestRecord>();
+        list.add(new TestRecord("Child 1"));
+        list.add(new TestRecord("Child 2"));
+        var value = new TestRecordWithList("Some Random Value", list);
+
+
+        var json = Json.encode(value);
+        System.out.println("json: " + json);
+        var valueBack = Json.decode(json, TestRecordWithList.class);
         assertNotNull(valueBack);
 
         assertEquals(value.field, valueBack.field);
