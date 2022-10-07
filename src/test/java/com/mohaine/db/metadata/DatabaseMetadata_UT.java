@@ -42,6 +42,13 @@ public class DatabaseMetadata_UT {
         var jsonAndBack = SchemaDef.fromJson(json);
         validateTestSchema(jsonAndBack);
 
+        var schemas = new ArrayList<SchemaDef>();
+        schemas.add(metadata);
+
+        var dbMetadata = new DatabaseDef(schemas);
+        var dbMetadataBack = DatabaseDef.fromJson(dbMetadata.toJson());
+
+        validateTestSchema(dbMetadataBack.findSchema(metadata.name()));
     }
 
     private void validateTestSchema(SchemaDef metadata) {

@@ -5,16 +5,12 @@ import com.mohaine.json.Json;
 import java.util.List;
 
 
-public record SchemaDef(String name, List<TableDef> tables) {
+public record DatabaseDef(List<SchemaDef> schemas) {
 
-    public SchemaDef(List<TableDef> tables) {
-        this(null, tables);
-    }
-
-    public TableDef findTable(String tableName) {
-        for (TableDef table : tables) {
-            if (table.name().equalsIgnoreCase(tableName)) {
-                return table;
+    public SchemaDef findSchema(String name) {
+        for (SchemaDef schemaDef : schemas) {
+            if (schemaDef.name().equalsIgnoreCase(name)) {
+                return schemaDef;
             }
         }
         return null;
@@ -28,9 +24,9 @@ public record SchemaDef(String name, List<TableDef> tables) {
         }
     }
 
-    public static SchemaDef fromJson(String json) {
+    public static DatabaseDef fromJson(String json) {
         try {
-            return Json.decode(json, SchemaDef.class);
+            return Json.decode(json, DatabaseDef.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

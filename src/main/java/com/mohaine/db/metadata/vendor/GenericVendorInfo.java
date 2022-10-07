@@ -97,7 +97,7 @@ public class GenericVendorInfo implements DbInfo {
         } finally {
             DatabaseUtils.close(tablesRs);
         }
-        return new SchemaDef(tableDefs);
+        return new SchemaDef(schema, tableDefs);
     }
 
 

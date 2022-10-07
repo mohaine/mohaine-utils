@@ -21,13 +21,22 @@ public class GenericVendorApply implements DbApply {
 
     }
 
-
     @Override
     public void createTable(TableDef tableDef) throws SQLException {
+        createTable(null, tableDef);
+    }
+
+    @Override
+    public void createTable(String schemaName, TableDef tableDef) throws SQLException {
 
         StringBuilder sb = new StringBuilder();
 
         sb.append("create table ");
+
+        if (schemaName != null && !schemaName.isBlank()) {
+            appendSchemaName(sb, schemaName);
+            sb.append(".");
+        }
 
         appendTableName(sb, tableDef);
 
@@ -127,6 +136,12 @@ public class GenericVendorApply implements DbApply {
         sb.append(" ) ");
 
         DatabaseUtils.execute(conn, sb.toString());
+    }
+
+    private void appendSchemaName(StringBuilder sb, String schemaName) {
+        sb.append('"');
+        sb.append(schemaName);
+        sb.append('"');
     }
 
     protected void appendTableName(StringBuilder sb, TableDef tableDef) {

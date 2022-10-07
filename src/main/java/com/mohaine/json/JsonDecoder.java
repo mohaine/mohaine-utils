@@ -150,13 +150,13 @@ public class JsonDecoder {
         bypassWhitespace();
         String name = parseString();
         if (name == null) {
-            throw new RuntimeException("JSON: invalid ojbect. missing name at " + getLineChar(offset));
+            throw new RuntimeException("JSON: invalid object. missing name at " + getLineChar(offset));
         }
         bypassWhitespace();
 
         char valueChar = jsonString.charAt(offset);
         if (valueChar != ':') {
-            throw new RuntimeException("JSON: invalid ojbect. missing : at " + getLineChar(offset));
+            throw new RuntimeException("JSON: invalid object. missing : at " + getLineChar(offset));
         }
         offset++;
         bypassWhitespace();
