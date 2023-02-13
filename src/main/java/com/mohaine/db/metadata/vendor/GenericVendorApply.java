@@ -73,7 +73,7 @@ public class GenericVendorApply implements DbApply {
 
         for (ColumnDef columnDef : columns) {
             if (columnDef.indexed()) {
-                createIndex(tableDef, columnDef);
+                createIndex(schemaName, tableDef, columnDef);
             }
         }
     }
@@ -122,7 +122,7 @@ public class GenericVendorApply implements DbApply {
     }
 
 
-    protected void createIndex(TableDef tableDef, ColumnDef columnDef) throws SQLException {
+    protected void createIndex(String schemaName, TableDef tableDef, ColumnDef columnDef) throws SQLException {
 
         StringBuilder sb = new StringBuilder();
         sb.append("create index ");
@@ -130,6 +130,12 @@ public class GenericVendorApply implements DbApply {
         appendIndexName(sb, tableDef, columnDef);
 
         sb.append(" on ");
+
+        if (schemaName != null && !schemaName.isBlank()) {
+            appendSchemaName(sb, schemaName);
+            sb.append(".");
+        }
+
         appendTableName(sb, tableDef);
         sb.append(" ( ");
         appendColumnName(sb, columnDef);
@@ -138,7 +144,7 @@ public class GenericVendorApply implements DbApply {
         DatabaseUtils.execute(conn, sb.toString());
     }
 
-    private void appendSchemaName(StringBuilder sb, String schemaName) {
+    protected void appendSchemaName(StringBuilder sb, String schemaName) {
         sb.append('"');
         sb.append(schemaName);
         sb.append('"');
