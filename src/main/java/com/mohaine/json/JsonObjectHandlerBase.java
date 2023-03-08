@@ -1,15 +1,13 @@
 package com.mohaine.json;
 
+import com.mohaine.util.CreateNewObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class JsonObjectHandlerBase<T> implements JsonObjectHandler<T> {
-
-    record CreateNewObject<T>(T obj, Set<String> unhandledNames) {
-    }
-
 
     private Map<String, JsonObjectPropertyHandler<T, ?>> fieldHandlers = new HashMap<String, JsonObjectPropertyHandler<T, ?>>();
 
@@ -85,13 +83,13 @@ public abstract class JsonObjectHandlerBase<T> implements JsonObjectHandler<T> {
             for (JsonObjectPropertyHandler<T, ?> ph : propertyHandlers) {
                 JsonObjectPropertyHandler<T, Object> phT = (JsonObjectPropertyHandler<T, Object>) ph;
 
-                if (newObj.unhandledNames.contains(phT.getName())) {
-                    phT.setValue(newObj.obj, namesToValues.get(phT.getName()));
+                if (newObj.unhandledNames().contains(phT.getName())) {
+                    phT.setValue(newObj.obj(), namesToValues.get(phT.getName()));
                 }
             }
         }
 
-        return newObj.obj;
+        return newObj.obj();
     }
 
 

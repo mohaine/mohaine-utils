@@ -1,6 +1,9 @@
 package com.mohaine.json;
 
 
+import com.mohaine.util.CreateNewObject;
+import com.mohaine.util.ReflectionObjectBuilder;
+
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -123,43 +126,18 @@ public class ReflectionJsonHandler {
 
 
     private static final class ReflectionJsonObjectHandler<T> extends JsonObjectHandlerBase<T> {
-        private final Constructor<T> constructor;
-        private Class<T> classToBuild;
+        private final ReflectionObjectBuilder reflectionObjectBuilder;
+        private final Class<T> classToBuild;
         ArrayList<JsonObjectPropertyHandler<T, ?>> phs = new ArrayList<JsonObjectPropertyHandler<T, ?>>();
-        private final Map<String, Integer> nameToIndexMap = new HashMap<>();
-        private final Type[] constructorGenericTypes;
 
 
         public ReflectionJsonObjectHandler(Class<T> classToBuild) {
-            this.classToBuild = classToBuild;
-            var rawTypes = new Class<?>[0];
-
-            RecordComponent[] recordComponents = classToBuild.getRecordComponents();
-            if (recordComponents == null) {
-                constructorGenericTypes = new Type[0];
-            } else {
-                rawTypes = new Class<?>[recordComponents.length];
-                constructorGenericTypes = new Type[recordComponents.length];
-                var index = 0;
-                for (RecordComponent recordComponent : recordComponents) {
-                    constructorGenericTypes[index] = recordComponent.getGenericType();
-                    rawTypes[index] = recordComponent.getType();
-                    nameToIndexMap.put(recordComponent.getName(), index);
-                    index += 1;
-                }
-            }
-
-            try {
-                this.constructor = classToBuild.getDeclaredConstructor(rawTypes);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
-            this.constructor.setAccessible(true);
-
+            this.classToBuild=classToBuild;
+            this.reflectionObjectBuilder  = new ReflectionObjectBuilder<T>(classToBuild);
         }
 
         public Class<T> getType() {
-            return classToBuild;
+            return this.classToBuild;
         }
 
         @Override
@@ -175,34 +153,7 @@ public class ReflectionJsonHandler {
 
         @Override
         protected CreateNewObject<T> createNewObject(HashMap<String, Object> namesToValues) {
-            Object[] args = new Object[constructorGenericTypes.length];
-
-            Set<String> unhandledNames = new HashSet<>();
-
-            namesToValues.entrySet().forEach(e -> {
-                var index = nameToIndexMap.get(e.getKey());
-                if (index != null) {
-                    args[index] = e.getValue();
-                } else {
-                    unhandledNames.add(e.getKey());
-                }
-            });
-
-            try {
-                return new CreateNewObject((T) constructor.newInstance(args), unhandledNames);
-            } catch (InstantiationException | SecurityException | IllegalAccessException |
-                     IllegalArgumentException | InvocationTargetException e) {
-
-
-                System.out.println("types: " + Arrays.asList(constructorGenericTypes).stream().map(i -> i.getTypeName()).toList());
-                System.out.println("args : " + Arrays.asList(args).stream().map(i -> {
-                    if (i == null) {
-                        return null;
-                    }
-                    return i.getClass().getName();
-                }).toList());
-                throw new RuntimeException(e);
-            }
+            return this.reflectionObjectBuilder.createNewObject(namesToValues);
         }
 
         public void addPropertyHandler(JsonObjectPropertyHandler<T, ?> propertyHandler) {
