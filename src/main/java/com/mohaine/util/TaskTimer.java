@@ -3,7 +3,7 @@ package com.mohaine.util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskTimer {
+public class TaskTimer implements AutoCloseable {
     private long startTime;
     private long runTime;
     private String name;
@@ -23,13 +23,21 @@ public class TaskTimer {
 
     private List<TaskTimer> subTimers;
 
-    public TaskTimer(String name) {
+    public TaskTimer(String name, Boolean autoStart) {
         this.name = name;
         reset();
+        if (autoStart) {
+            this.start();
+        }
     }
 
     public TaskTimer() {
-        reset();
+        this(null);
+    }
+
+
+    public TaskTimer(String name) {
+        this(name, true);
     }
 
     public String getName() {
@@ -192,5 +200,10 @@ public class TaskTimer {
         if (this.parent != null) {
             threadLocal.set(this.parent);
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.stop();
     }
 }
