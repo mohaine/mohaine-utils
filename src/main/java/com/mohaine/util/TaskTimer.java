@@ -21,7 +21,7 @@ public class TaskTimer implements AutoCloseable {
         return threadLocal.get();
     }
 
-    private List<TaskTimer> subTimers;
+    private List<TaskTimer> childTimers;
 
     public TaskTimer(String name, Boolean autoStart) {
         this.name = name;
@@ -64,8 +64,17 @@ public class TaskTimer implements AutoCloseable {
         if (threadLocal.get() == this) {
             stopCurrent();
         }
+
+        if (childTimers != null) {
+            for (var child : childTimers) {
+                child.stop();
+            }
+        }
     }
 
+    /**
+     * @return Run time in nano seconds
+     */
     public long getRunTime() {
         return getActiveRunTime() + runTime;
     }
@@ -121,13 +130,13 @@ public class TaskTimer implements AutoCloseable {
         }
         sb.append(showNanosecondsInHumanForm(runTime));
 
-        if (nt.subTimers != null) {
+        if (nt.childTimers != null) {
             sb.append("\r\n");
-            for (int i = 0; i < nt.subTimers.size(); i++) {
+            for (int i = 0; i < nt.childTimers.size(); i++) {
                 if (i > 0) {
                     sb.append("\r\n");
                 }
-                append(sb, nt.subTimers.get(i), depth + 1, runTime);
+                append(sb, nt.childTimers.get(i), depth + 1, runTime);
             }
         }
     }
@@ -170,13 +179,26 @@ public class TaskTimer implements AutoCloseable {
         return sb.toString();
     }
 
+    public TaskTimer startSibling(String name) {
+        stop();
+        var nt = parent.startChild(name);
+        nt.makeCurrent();
+        return nt;
+    }
+
+ 
+    @Deprecated
     public TaskTimer getSub(String name) {
-        if (subTimers == null) {
-            subTimers = new ArrayList<TaskTimer>();
+        return startChild(name);
+    }
+
+    public TaskTimer startChild(String name) {
+        if (childTimers == null) {
+            childTimers = new ArrayList<TaskTimer>();
         }
 
-        for (int i = 0; i < subTimers.size(); i++) {
-            TaskTimer nt = subTimers.get(i);
+        for (int i = 0; i < childTimers.size(); i++) {
+            TaskTimer nt = childTimers.get(i);
             if (name.equals(nt.name)) {
                 return nt;
             }
@@ -184,12 +206,12 @@ public class TaskTimer implements AutoCloseable {
 
         TaskTimer nt = new TaskTimer(name);
         nt.parent = this;
-        subTimers.add(nt);
+        childTimers.add(nt);
         return nt;
     }
 
     public List<TaskTimer> getChildren() {
-        return subTimers;
+        return childTimers;
     }
 
     public void makeCurrent() {
