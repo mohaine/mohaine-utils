@@ -20,6 +20,7 @@ public class PrintablePreparedStatementProxy extends PrintableStatementProxy imp
         super(printer, preStmt, sql);
         this.sql = sql;
         this.preStmt = preStmt;
+        printer.outputPreBindSql(sql);
     }
 
     public void clearBinds() {

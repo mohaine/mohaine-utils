@@ -9,4 +9,6 @@ public interface SqlPrinter {
     public void outputSqlError(Object sql);
 
     public String getBindSqlString(Object o);
+
+    public void outputPreBindSql(String sql);
 }

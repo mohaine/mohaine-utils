@@ -19,6 +19,11 @@ public abstract class SqlPrinterAbstract implements SqlPrinter {
     }
 
     @Override
+    public void outputPreBindSql(String sql) {
+
+    }
+
+    @Override
     public String getBindSqlString(Object bindObject) {
         StringBuilder sb = new StringBuilder();
         if (bindObject instanceof java.util.Date) {

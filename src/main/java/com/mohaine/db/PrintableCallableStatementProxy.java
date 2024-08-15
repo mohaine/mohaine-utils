@@ -57,6 +57,7 @@ public class PrintableCallableStatementProxy extends PrintablePreparedStatementP
     public PrintableCallableStatementProxy(SqlPrinter printer, CallableStatement callStmt, String sql) {
         super(printer, callStmt, sql);
         this.callStmt = callStmt;
+        printer.outputPreBindSql(sql);
     }
 
     public void registerOutParameter(int parameterIndex, int sqlType) throws SQLException {
