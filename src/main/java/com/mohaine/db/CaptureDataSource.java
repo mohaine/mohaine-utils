@@ -7,23 +7,23 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-public class PrintableDataSource implements DataSource {
+public class CaptureDataSource implements DataSource {
 
     private final DataSource proxiedDataSource;
-    private final SqlPrinter printer;
+    private final SqlCapture capture;
 
-    public PrintableDataSource(DataSource proxiedDataSource, SqlPrinter printer) {
+    public CaptureDataSource(DataSource proxiedDataSource, SqlCapture capture) {
         this.proxiedDataSource = proxiedDataSource;
-        this.printer = printer;
+        this.capture = capture;
     }
 
     public Connection getConnection() throws SQLException {
-        return new PrintableConnectionProxy(proxiedDataSource.getConnection(), printer);
+        return new CaptureConnectionProxy(proxiedDataSource.getConnection(), capture);
     }
 
     public Connection getConnection(String username, String password) throws SQLException {
         final Connection connection = proxiedDataSource.getConnection(username, password);
-        return new PrintableConnectionProxy(connection, printer);
+        return new CaptureConnectionProxy(connection, capture);
     }
 
     public PrintWriter getLogWriter() throws SQLException {

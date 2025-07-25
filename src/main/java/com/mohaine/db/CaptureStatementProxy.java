@@ -2,23 +2,25 @@ package com.mohaine.db;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class PrintableStatementProxy implements Statement {
+public class CaptureStatementProxy implements Statement {
     private List<String> batchedSql = null;
     private Statement stmt = null;
 
     private String sql;
-    protected final SqlPrinter printer;
+    protected final SqlCapture capture;
 
-    public PrintableStatementProxy(SqlPrinter printer, Statement stmt) {
-        this.printer = printer;
+    public CaptureStatementProxy(SqlCapture printer, Statement stmt) {
+        this.capture = printer;
         this.stmt = stmt;
         clearBatchedSql();
     }
 
-    public PrintableStatementProxy(SqlPrinter printer, Statement stmt,
-                                   String sql) {
+    public CaptureStatementProxy(SqlCapture printer, Statement stmt,
+                                 String sql) {
         this(printer, stmt);
         this.sql = sql;
     }
@@ -38,17 +40,16 @@ public class PrintableStatementProxy implements Statement {
     }
 
     protected void printPreExecute() {
-        printer.outputPreSql(this);
+        capture.beforeRun(this);
     }
 
     protected void printPostExecute(long startTime) {
-        printer.outputPostSql(this, startTime);
+        capture.afterRun(this, startTime);
     }
 
     protected void printError() {
-        printer.outputSqlError(this);
+        capture.afterError(this);
     }
-
 
 
     @Override
@@ -73,8 +74,14 @@ public class PrintableStatementProxy implements Statement {
         printPreExecute();
         boolean ok = false;
         long startTime = System.currentTimeMillis();
+
+        CaptureResultSet captureResultSet = null;
         try {
             ResultSet results = stmt.executeQuery(sql);
+            if (capture instanceof SqlDataCapture) {
+                captureResultSet = new CaptureResultSet((SqlDataCapture) capture, this, startTime, results);
+                results = captureResultSet;
+            }
             ok = true;
             return results;
         } finally {
@@ -91,8 +98,9 @@ public class PrintableStatementProxy implements Statement {
         printPreExecute();
         boolean ok = false;
         long startTime = System.currentTimeMillis();
+        Integer results = null;
         try {
-            int results = stmt.executeUpdate(sql);
+            results = stmt.executeUpdate(sql);
             ok = true;
             return results;
         } finally {
@@ -100,6 +108,9 @@ public class PrintableStatementProxy implements Statement {
                 printPostExecute(startTime);
             } else {
                 printError();
+            }
+            if (capture instanceof SqlDataCapture) {
+                ((SqlDataCapture) capture).onComplete(this, startTime, new SqlDataCapture.QueryResults(results));
             }
         }
     }
@@ -156,8 +167,9 @@ public class PrintableStatementProxy implements Statement {
         printPreExecute();
         long startTime = System.currentTimeMillis();
         boolean ok = false;
+        Boolean results = null;
         try {
-            boolean results = stmt.execute(sql);
+            results = stmt.execute(sql);
             ok = true;
             return results;
         } finally {
@@ -165,6 +177,9 @@ public class PrintableStatementProxy implements Statement {
                 printPostExecute(startTime);
             } else {
                 printError();
+            }
+            if (capture instanceof SqlDataCapture) {
+                ((SqlDataCapture) capture).onComplete(this, startTime, new SqlDataCapture.QueryResults(results));
             }
         }
     }
@@ -220,8 +235,9 @@ public class PrintableStatementProxy implements Statement {
         printPreExecute();
         boolean ok = false;
         long startTime = System.currentTimeMillis();
+        int[] results = null;
         try {
-            int[] results = stmt.executeBatch();
+             results = stmt.executeBatch();
             ok = true;
             return results;
         } finally {
@@ -229,6 +245,9 @@ public class PrintableStatementProxy implements Statement {
                 printPostExecute(startTime);
             } else {
                 printError();
+            }
+            if (capture instanceof SqlDataCapture) {
+                ((SqlDataCapture) capture).onComplete(this, startTime, new SqlDataCapture.QueryResults(results));
             }
             clearBatchedSql();
         }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class PrintablePreparedStatementProxy extends PrintableStatementProxy implements PreparedStatement {
+public class CapturePreparedStatementProxy extends CaptureStatementProxy implements PreparedStatement {
 
     private PreparedStatement preStmt = null;
 
@@ -16,11 +16,11 @@ public class PrintablePreparedStatementProxy extends PrintableStatementProxy imp
 
     private final String sql;
 
-    public PrintablePreparedStatementProxy(SqlPrinter printer, PreparedStatement preStmt, String sql) {
+    public CapturePreparedStatementProxy(SqlCapture printer, PreparedStatement preStmt, String sql) {
         super(printer, preStmt, sql);
         this.sql = sql;
         this.preStmt = preStmt;
-        printer.outputPreBindSql(sql);
+        printer.preBindSql(sql);
     }
 
     public void clearBinds() {
@@ -98,7 +98,7 @@ public class PrintablePreparedStatementProxy extends PrintableStatementProxy imp
     }
 
     private String getBindSqlString(Object o) {
-        return printer.getBindSqlString(o);
+        return capture.getBindSqlString(o);
     }
 
     private String getReaderValue(Reader reader, int length) {
@@ -345,12 +345,14 @@ public class PrintablePreparedStatementProxy extends PrintableStatementProxy imp
         super.clearBatchedSql();
     }
 
+
     public int executeUpdate() throws SQLException {
         printPreExecute();
         boolean ok = false;
         long startTime = System.currentTimeMillis();
+        Integer results = null;
         try {
-            int results = preStmt.executeUpdate();
+            results = preStmt.executeUpdate();
             ok = true;
             return results;
         } finally {
@@ -358,6 +360,9 @@ public class PrintablePreparedStatementProxy extends PrintableStatementProxy imp
                 printPostExecute(startTime);
             } else {
                 printError();
+            }
+            if (capture instanceof SqlDataCapture) {
+                ((SqlDataCapture) capture).onComplete(this, startTime, new SqlDataCapture.QueryResults(results));
             }
         }
     }
@@ -366,8 +371,9 @@ public class PrintablePreparedStatementProxy extends PrintableStatementProxy imp
         printPreExecute();
         boolean ok = false;
         long startTime = System.currentTimeMillis();
+        Boolean results = null;
         try {
-            boolean results = preStmt.execute();
+            results = preStmt.execute();
             ok = true;
             return results;
         } finally {
@@ -376,6 +382,9 @@ public class PrintablePreparedStatementProxy extends PrintableStatementProxy imp
             } else {
                 printError();
             }
+            if (capture instanceof SqlDataCapture) {
+                ((SqlDataCapture) capture).onComplete(this, startTime, new SqlDataCapture.QueryResults(results));
+            }
         }
     }
 
@@ -383,8 +392,14 @@ public class PrintablePreparedStatementProxy extends PrintableStatementProxy imp
         printPreExecute();
         long startTime = System.currentTimeMillis();
         boolean ok = false;
+
+        CaptureResultSet captureResultSet = null;
         try {
             ResultSet results = preStmt.executeQuery();
+            if (capture instanceof SqlDataCapture) {
+                captureResultSet = new CaptureResultSet((SqlDataCapture) capture, this, startTime, results);
+                results = captureResultSet;
+            }
             ok = true;
             return results;
         } finally {

@@ -5,7 +5,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class PrintableDriver implements Driver {
+public class CaptureDriver implements Driver {
     /*
      * This class will proxy any connections made through DriverManager with a
      * PrintableConnectionProxy,but it must be the first driver regisitered. To
@@ -19,12 +19,12 @@ public class PrintableDriver implements Driver {
         try {
             Enumeration<Driver> driversEnum = DriverManager.getDrivers();
 
-            DriverManager.registerDriver(new PrintableDriver());
+            DriverManager.registerDriver(new CaptureDriver());
 
             // Move all the other drivers to the end
             while (driversEnum.hasMoreElements()) {
                 Driver driver = (Driver) driversEnum.nextElement();
-                if (!(driver instanceof PrintableDriver)) {
+                if (!(driver instanceof CaptureDriver)) {
                     DriverManager.deregisterDriver(driver);
                     DriverManager.registerDriver(driver);
                 }
@@ -85,8 +85,8 @@ public class PrintableDriver implements Driver {
 
             if (conn != null) {
 
-                SqlPrinter printer = control.getPrinterFor(connectString, conn);
-                conn = new PrintableConnectionProxy(conn, printer);
+                SqlCapture printer = control.getPrinterFor(connectString, conn);
+                conn = new CaptureConnectionProxy(conn, printer);
             }
 
             theadLock.set(null);
@@ -109,7 +109,7 @@ public class PrintableDriver implements Driver {
     }
 
     public interface PrintableDriverController {
-        SqlPrinter getPrinterFor(String connectString, Connection conn);
+        SqlCapture getPrinterFor(String connectString, Connection conn);
 
         String modifyConnection(String connectString, Properties props);
     }
@@ -131,9 +131,9 @@ public class PrintableDriver implements Driver {
 
         return new PrintableDriverController() {
             @Override
-            public SqlPrinter getPrinterFor(String connectString,
+            public SqlCapture getPrinterFor(String connectString,
                                             Connection conn) {
-                return new SqlPrinterConsole();
+                return new SqlCaptureConsole();
             }
 
             @Override

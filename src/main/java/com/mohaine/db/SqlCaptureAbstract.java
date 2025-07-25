@@ -2,24 +2,24 @@ package com.mohaine.db;
 
 import java.text.SimpleDateFormat;
 
-public abstract class SqlPrinterAbstract implements SqlPrinter {
+public abstract class SqlCaptureAbstract implements SqlCapture {
     @Override
-    public void outputPreSql(Object sql) {
+    public void beforeRun(Object sql) {
 
     }
 
     @Override
-    public void outputPostSql(Object sql, long startTime) {
+    public void afterRun(Object sql, long startTime) {
 
     }
 
     @Override
-    public void outputSqlError(Object sql) {
+    public void afterError(Object sql) {
 
     }
 
     @Override
-    public void outputPreBindSql(String sql) {
+    public void preBindSql(String sql) {
 
     }
 

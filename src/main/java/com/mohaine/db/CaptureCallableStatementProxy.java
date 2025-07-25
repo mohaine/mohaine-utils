@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
 
-public class PrintableCallableStatementProxy extends PrintablePreparedStatementProxy implements CallableStatement {
+public class CaptureCallableStatementProxy extends CapturePreparedStatementProxy implements CallableStatement {
 
     private CallableStatement callStmt = null;
 //    private Map<String, Object> namedBinds;
@@ -34,30 +34,30 @@ public class PrintableCallableStatementProxy extends PrintablePreparedStatementP
     }
 
     void setBind(String name, byte o) {
-        setBind(name, new Byte(o));
+        setBind(name, Byte.valueOf(o));
     }
 
     void setBind(String name, int o) {
-        setBind(name, new Integer(o));
+        setBind(name, Integer.valueOf(o));
     }
 
     void setBind(String name, long o) {
-        setBind(name, new Long(o));
+        setBind(name, Long.valueOf(o));
     }
 
     void setBind(String name, float o) {
-        setBind(name, new Float(o));
+        setBind(name, Float.valueOf(o));
     }
 
     void setBind(String name, double o) {
-        setBind(name, new Double(o));
+        setBind(name, Double.valueOf(o));
     }
 
 
-    public PrintableCallableStatementProxy(SqlPrinter printer, CallableStatement callStmt, String sql) {
+    public CaptureCallableStatementProxy(SqlCapture printer, CallableStatement callStmt, String sql) {
         super(printer, callStmt, sql);
         this.callStmt = callStmt;
-        printer.outputPreBindSql(sql);
+        printer.preBindSql(sql);
     }
 
     public void registerOutParameter(int parameterIndex, int sqlType) throws SQLException {

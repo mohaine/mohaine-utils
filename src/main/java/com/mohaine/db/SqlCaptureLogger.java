@@ -3,17 +3,17 @@ package com.mohaine.db;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SqlPrinterLogger extends SqlPrinterAbstract {
+public class SqlCaptureLogger extends SqlCaptureAbstract {
     public static final Level DEFAULT_POST_PRINT_PRIORITY = Level.FINEST;
 
     private Logger objectLogger = null;
 
     @Override
-    public void outputPreSql(Object sql) {
+    public void beforeRun(Object sql) {
     }
 
     @Override
-    public void outputPostSql(Object sql, long startTime) {
+    public void afterRun(Object sql, long startTime) {
         try {
             Logger logger = getLogger();
             long runTime = System.currentTimeMillis() - startTime;
@@ -30,7 +30,7 @@ public class SqlPrinterLogger extends SqlPrinterAbstract {
     }
 
     @Override
-    public void outputSqlError(Object sql) {
+    public void afterError(Object sql) {
         try {
             getLogger().log(Level.SEVERE, sql.toString());
         } catch (Exception e) {

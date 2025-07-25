@@ -1,15 +1,15 @@
 package com.mohaine.db;
 
 
-public class SqlPrinterConsole extends SqlPrinterAbstract {
+public class SqlCaptureConsole extends SqlCaptureAbstract {
 
     @Override
-    public void outputPreSql(Object sql) {
+    public void beforeRun(Object sql) {
     }
 
 
     @Override
-    public void outputPostSql(Object sql, long startTime) {
+    public void afterRun(Object sql, long startTime) {
         try {
             long runTime = System.currentTimeMillis() - startTime;
             logMessage(String.format("%6d:%s", runTime, sql.toString()));
@@ -19,7 +19,7 @@ public class SqlPrinterConsole extends SqlPrinterAbstract {
     }
 
     @Override
-    public void outputSqlError(Object sql) {
+    public void afterError(Object sql) {
         try {
             logMessage("ERROR: " + sql.toString());
         } catch (Throwable t) {
@@ -27,7 +27,7 @@ public class SqlPrinterConsole extends SqlPrinterAbstract {
         }
     }
 
-    protected void logMessage(Object sql) {
+    public void logMessage(Object sql) {
         System.out.println(sql);
     }
 
