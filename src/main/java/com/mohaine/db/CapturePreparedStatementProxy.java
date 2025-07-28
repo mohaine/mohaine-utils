@@ -16,11 +16,11 @@ public class CapturePreparedStatementProxy extends CaptureStatementProxy impleme
 
     private final String sql;
 
-    public CapturePreparedStatementProxy(SqlCapture printer, PreparedStatement preStmt, String sql) {
-        super(printer, preStmt, sql);
+    public CapturePreparedStatementProxy(SqlCapture capture, PreparedStatement preStmt, String sql) {
+        super(capture, preStmt, sql);
         this.sql = sql;
         this.preStmt = preStmt;
-        printer.preBindSql(sql);
+        capture.preBindSql(sql);
     }
 
     public void clearBinds() {

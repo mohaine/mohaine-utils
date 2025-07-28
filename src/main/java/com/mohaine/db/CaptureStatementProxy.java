@@ -13,8 +13,8 @@ public class CaptureStatementProxy implements Statement {
     private String sql;
     protected final SqlCapture capture;
 
-    public CaptureStatementProxy(SqlCapture printer, Statement stmt) {
-        this.capture = printer;
+    public CaptureStatementProxy(SqlCapture capture, Statement stmt) {
+        this.capture = capture;
         this.stmt = stmt;
         clearBatchedSql();
     }
