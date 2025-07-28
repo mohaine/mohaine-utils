@@ -8,7 +8,7 @@
     <groupId>com.mohaine</groupId>
     <artifactId>mohaine-utils</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.3/version>
+    <version>2.0.3</version>
     <description>Collection of simple utils</description>
     <url>http://maven.apache.org</url>
     <licenses>
