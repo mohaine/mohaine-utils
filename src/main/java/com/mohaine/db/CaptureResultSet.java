@@ -12,12 +12,15 @@ public class CaptureResultSet extends ProxyResultSet {
     private final long startTime;
     private SqlDataCapture.QueryResults results = null;
 
+    private boolean closed;
+
     public CaptureResultSet(SqlDataCapture capture, Object sql, long startTime, ResultSet rs) {
         super(rs);
         this.capture = capture;
         this.sql = sql;
         this.rs = rs;
         this.startTime = startTime;
+        this.closed = false;
     }
 
     @Override
@@ -48,7 +51,11 @@ public class CaptureResultSet extends ProxyResultSet {
 
     @Override
     public void close() throws SQLException {
-        capture.onComplete(sql.toString(), startTime, results);
+        if (!closed) {
+            // Only log once
+            capture.onComplete(sql.toString(), startTime, results);
+        }
+        this.closed = true;
         super.close();
     }
 }

@@ -126,7 +126,6 @@ public class CaptureConnection_UT {
             assertEquals(Arrays.asList(1), results.get("update test set text_column = 'abc' where id = 1").getRows().get(0));
             assertEquals(Arrays.asList(1), results.get("update test set text_column = '111' where id = 1;update test set text_column = '333' where id = 3").getRows().get(0));
             assertEquals(Arrays.asList(0), results.get("update test set text_column = '111' where id = 1;update test set text_column = '333' where id = 3").getRows().get(1));
-
         }
     }
 
@@ -143,6 +142,11 @@ public class CaptureConnection_UT {
 
         @Override
         public void onComplete(Object sql, long startTime, QueryResults results) {
+
+            if(this.results.containsKey(sql.toString())) {
+                throw new RuntimeException("Double Logged!!!");
+            }
+
             this.results.put(sql.toString(), results);
         }
     }
